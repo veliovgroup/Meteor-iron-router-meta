@@ -1,8 +1,8 @@
 Reactive meta tags for meteor within iron-router
 ========
-Change meta tags on the fly within [iron-router](https://atmospherejs.com/iron/router)
+Change meta tags on the fly within [iron-router](https://atmospherejs.com/iron/router). This package can create `meta` tags, and `link` tags as well.
 
-__Note__: this package implies [ostrio:iron-router-title](https://atmospherejs.com/ostrio/iron-router-title) package
+__Note__: this package implies [ostrio:iron-router-title](https://atmospherejs.com/ostrio/iron-router-title) package.
 
 Install:
 ========
@@ -12,6 +12,57 @@ meteor add ostrio:iron-router-meta
 
 Usage:
 ========
+Set only `name` and `content` attributes on `meta` tag:
+```coffeescript
+Router.route 'routeName',
+  meta:
+    name: 'content'
+```
+
+Set only `rel` and `href` attributes on `link` tag:
+```coffeescript
+Router.route 'routeName',
+  link:
+    rel: 'href'
+```
+
+Set multiple attributes on `meta` tag:
+```coffeescript
+Router.route 'routeName',
+  meta:
+    uniqueName: 
+      name: 'name'
+      content: 'content'
+      value: 'value'
+      'og:prop': 'value'
+      itemprop: 'value'
+```
+
+Set multiple attributes on `link` tag:
+```coffeescript
+Router.route 'routeName',
+  link:
+    uniqueName: 
+      rel: 'name'
+      sizes: 'value'
+      href: 'value'
+      type: 'value'
+```
+
+You can pass functions as value:
+```coffeescript
+Router.route 'routeName',
+  meta:
+    url:
+      property: 'og:url'
+      itemprop: 'url'
+      content: ->
+        window.location.href
+  link:
+    canonical: ->
+      window.location.href
+```
+
 Set default values in `Router.configure()`
 ```coffeescript
 Router.configure

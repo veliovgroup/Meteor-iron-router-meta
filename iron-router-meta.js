@@ -101,6 +101,6 @@ Router.onAfterAction(function(){
       _.each(Router.options.link, function(settings, name){
         addLink(name, settings);
       });
-    };
+    }
   }
 });

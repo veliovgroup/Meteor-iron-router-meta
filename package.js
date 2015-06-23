@@ -1,6 +1,6 @@
 Package.describe({
   name: 'ostrio:iron-router-meta',
-  version: '1.0.1',
+  version: '1.0.3',
   summary: 'Change meta tags on the fly within iron-router',
   git: 'https://github.com/VeliovGroup/Meteor-iron-router-meta',
   documentation: 'README.md'

@@ -7,11 +7,12 @@ var addMeta = function(name, settings){
     if(_.isFunction(settings)){
       settings = settings.call(this);
     }
-
-    if($('head').has('meta[name="' + name + '"]')[0]){
-      $('meta[name="' + name + '"]').attr('content', settings);
-    }else{
-      $('head').append('<meta name="' + name + '" content="' + settings + '">');
+    if(settings){
+      if($('head').has('meta[name="' + name + '"]')[0]){
+        $('meta[name="' + name + '"]').attr('content', settings);
+      }else{
+        $('head').prepend('<meta name="' + name + '" content="' + settings + '">');
+      }
     }
 
   }else if(_.isObject(settings)){
@@ -20,7 +21,9 @@ var addMeta = function(name, settings){
         if(_.isFunction(content)){
           content = content.call(this);
         }
-        $('meta[metaName="' + name + '"]').attr(attrName, content);
+        if(content){
+          $('meta[metaName="' + name + '"]').attr(attrName, content);
+        }
       });
 
     }else{
@@ -30,10 +33,12 @@ var addMeta = function(name, settings){
         if(_.isFunction(content)){
           content = content.call(this);
         }
-        element.attr(attrName, content);
+        if(content){
+          element.attr(attrName, content);
+        }
       });
 
-      $('head').append(element);
+      $('head').prepend(element);
     }
   }
 };
@@ -45,10 +50,12 @@ var addLink = function(name, settings){
       settings = settings.call(this);
     }
 
-    if($('head').has('link[rel="' + name + '"]')[0]){
-      $('link[rel="' + name + '"]').attr('href', settings);
-    }else{
-      $('head').append('<link rel="' + name + '" href="' + settings + '">');
+    if(settings){
+      if($('head').has('link[rel="' + name + '"]')[0]){
+        $('link[rel="' + name + '"]').attr('href', settings);
+      }else{
+        $('head').prepend('<link rel="' + name + '" href="' + settings + '">');
+      }
     }
 
   }else if(_.isObject(settings)){
@@ -57,7 +64,9 @@ var addLink = function(name, settings){
         if(_.isFunction(content)){
           content = content.call(this);
         }
-        $('link[linkName="' + name + '"]').attr(attrName, content);
+        if(content){
+          $('link[linkName="' + name + '"]').attr(attrName, content);
+        }
       });
 
     }else{
@@ -67,40 +76,52 @@ var addLink = function(name, settings){
         if(_.isFunction(content)){
           content = content.call(this);
         }
-        element.attr(attrName, content);
+        if(content){
+          element.attr(attrName, content);
+        }
       });
 
-      $('head').append(element);
+      $('head').prepend(element);
     }
   }
 };
 
 Router.onAfterAction(function(){
-  if(_.has(this.route.options, "meta")){
-    if(!_.isUndefined(this.route.options.meta)){
-      _.each(this.route.options.meta, function(settings, name){
-        addMeta.call(this, name, settings);
-      });
-    }
-  }else if(_.has(Router.options, "meta")){
-    if(!_.isUndefined(Router.options.meta)){
-      _.each(Router.options.meta, function(settings, name){
-        addMeta.call(this, name, settings);
-      });
-    }
-  }
+  var self = this;
+  var opts = ["meta", "link"];
+  var configs = [Router.options, self.route.options];
+  var opt  = {};
+  _.each(opts, function(name){
+    opt[name] = false;
 
-  if(_.has(this.route.options, "link")){
-    if(!_.isUndefined(this.route.options.link)){
-      _.each(this.route.options.link, function(settings, name){
-        addLink.call(this, name, settings);
+    _.each(configs, function(config){
+      config = _.clone(config);
+      if(_.has(config, name)){
+        if(_.isFunction(config[name])){
+          config[name] = config[name].call(self);
+        }
+        if(!opt[name]){
+          opt[name] = {};
+        }
+        _.each(config[name], function(prop, propName){
+          if(_.isFunction(prop)){
+            prop = prop.call(self);
+          }
+          if(prop){
+            opt[name][propName] = prop;
+          }
+        });
+      }
+    });
+
+    if(opt[name]){
+      _.each(opt[name], function(settings, prop){
+        if(name === 'meta'){
+          addMeta.call(self, prop, settings);
+        }else if(name === 'link'){
+          addLink.call(self, prop, settings);
+        }
       });
     }
-  }else if(_.has(Router.options, "link")){
-    if(!_.isUndefined(Router.options.link)){
-      _.each(Router.options.link, function(settings, name){
-        addLink(name, settings);
-      });
-    }
-  }
+  });
 });

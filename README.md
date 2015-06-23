@@ -107,12 +107,15 @@ Use function context:
 Router.route 'account',
   template: 'account'
   path: '/me/account'
-  meta:
-    keywords: 
-      name: 'keywords'
-      itemprop: 'keywords'
-      content: ->
-        this.data().getKeywords()
+  meta: ->
+    if @data()
+      return {
+        keywords: 
+          name: 'keywords'
+          itemprop: 'keywords'
+          content: ->
+            @data().getKeywords()
+      }
   data: ->
     getKeywords: ->
       Collection.Posts.findOne('someId').keywords

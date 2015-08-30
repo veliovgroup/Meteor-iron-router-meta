@@ -27,6 +27,7 @@ Router.configure
     'og:url': ->
       property: 'og:url'
       content: -> getCurrentURL()
+    'og:title': -> document.title
   link:
     canonical: ->
       rel: 'canonical'

@@ -38,7 +38,7 @@ secondPageController = RouteController.extend
 Router.route 'secondPage', controller: secondPageController
 
 # Rewrite default CSS, for third route via route settings:
-@route 'thirdPage', 
+Router.route 'thirdPage', 
   link:
     stylesheet: "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css"
 ```
@@ -81,8 +81,8 @@ Router.route 'account',
 
 Set tags via `RouteController`:
 ```coffeescript
-LocationController = RouteController.extend(meta: keywords: 'User, Account')
-Router.route 'locations', controller: LocationController
+accountController = RouteController.extend(meta: keywords: 'User, Account')
+Router.route 'account', controller: accountController
 ```
 
 Set only `name` and `content` attributes on `meta` tag:

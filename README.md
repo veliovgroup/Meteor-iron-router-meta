@@ -1,6 +1,13 @@
-Reactive meta tags for meteor within iron-router
+Reactive meta tags and CSS for meteor within iron-router
 ========
 Change meta tags on the fly within [iron-router](https://atmospherejs.com/iron/router). This package can create `meta` tags, and `link` tags as well.
+
+This package may also help to use dynamic CSSs, so you may use different style sheets - for different routes.
+
+This package supports `meta` and `link` options (properties) defined on objects below, ordered by prioritization:
+ - `Router.route()` [*overrides all*]
+ - `RouteController.extend()`
+ - `Router.configure()` [*might be overridden by any above*]
 
 __Note__: this package implies [ostrio:iron-router-title](https://atmospherejs.com/ostrio/iron-router-title) package.
 
@@ -10,8 +17,74 @@ Install:
 meteor add ostrio:iron-router-meta
 ```
 
+Demo application:
+========
+##### [iron-router-meta.meteor.com](http://iron-router-meta.meteor.com)
+
 Usage:
 ========
+
+Change CSS per route:
+```coffeescript
+# Set default CSS for all routes
+Router.configure
+  link:
+    stylesheet: "https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css"
+
+# Rewrite default CSS, for second route, via controller:
+secondPageController = RouteController.extend
+  link:
+    stylesheet: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+Router.route 'secondPage', controller: secondPageController
+
+# Rewrite default CSS, for third route via route settings:
+@route 'thirdPage', 
+  link:
+    stylesheet: "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css"
+```
+
+Set default values in `Router.configure()`
+```coffeescript
+Router.configure
+  meta:
+    charset:
+      charset: 'UTF-8'
+    keywords: 
+      name: 'keywords'
+      itemprop: 'keywords'
+      content: 'Awesome, Meteor, based, app'
+    robots: 'index, follow'
+    google: 'notranslate'
+
+  link:
+    canonical: ->
+      window.location.href
+    image:
+      rel: 'image'
+      sizes: '500x500'
+      href: 'http://doma..'
+    publisher: 'http://plus.google...'
+```
+
+Then override default values in each route:
+```coffeescript
+Router.route 'account',
+  template: 'account'
+  path: '/me/account'
+  title: 'My Account'
+  meta:
+    keywords: 
+      name: 'keywords'
+      itemprop: 'keywords'
+      content: 'User, Account'
+```
+
+Set tags via `RouteController`:
+```coffeescript
+LocationController = RouteController.extend(meta: keywords: 'User, Account')
+Router.route 'locations', controller: LocationController
+```
+
 Set only `name` and `content` attributes on `meta` tag:
 ```coffeescript
 Router.route 'routeName',
@@ -63,62 +136,20 @@ Router.route 'routeName',
       window.location.href
 ```
 
-Set default values in `Router.configure()`
-```coffeescript
-Router.configure
-  meta:
-    charset:
-      charset: 'UTF-8'
-    keywords: 
-      name: 'keywords'
-      itemprop: 'keywords'
-      content: 'Awesome, Meteor, based, app'
-    robots: 'index, follow'
-    google: 'notranslate'
-
-  link:
-    canonical: ->
-      window.location.href
-    image:
-      rel: 'image'
-      sizes: '500x500'
-      href: 'http://doma..'
-    publisher: 'http://plus.google...'
-```
-
-Then override default values in each route:
-
-```coffeescript
-Router.route 'account',
-  template: 'account'
-  path: '/me/account'
-  title: 'My Account'
-  meta:
-    keywords: 
-      name: 'keywords'
-      itemprop: 'keywords'
-      content: 'User, Account'
-```
-
-
 Use function context:
-
 ```coffeescript
-Router.route 'account',
-  template: 'account'
-  path: '/me/account'
+Router.route 'post',
+  template: 'post'
+  path: '/post/:_id'
   meta: ->
-    if @data()
-      return {
-        keywords: 
-          name: 'keywords'
-          itemprop: 'keywords'
-          content: ->
-            @data().getKeywords()
-      }
-  data: ->
+    keywords: 
+      name: 'keywords'
+      itemprop: 'keywords'
+      content: ->
+        @data.getKeywords()
+  data:
     getKeywords: ->
-      Collection.Posts.findOne('someId').keywords
+      Collection.Posts.findOne(@params._id).keywords
 ```
 
 #### Sample config
@@ -179,6 +210,9 @@ Router.configure
   
 
   link:
+    # <link href="https://maxcdn.bootstrapcdn.com/..." rel="stylesheet">
+    stylesheet: "https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css"
+
     # <link rel="canonical" href="http://doma..">
     canonical: ->
       window.location.href

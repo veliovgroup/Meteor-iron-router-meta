@@ -3,13 +3,14 @@ class IronRouterMeta extends IronRouterHelper
     super @router
     @router.onAfterAction =>
       $('[data-link-name], [data-meta-name]').remove()
-      @addTag @router.options.meta if _.has @router.options, 'meta'
-      @addTag @currentController::['meta'] if _.has @currentController::, 'meta'
-      @addTag @currentRoute.route.options.meta if _.has @currentRoute.route.options, 'meta'
 
-      @addLink @router.options.link if _.has @router.options, 'link'
-      @addLink @currentController::['link'] if _.has @currentController::, 'link'
-      @addLink @currentRoute.route.options.link if _.has @currentRoute.route.options, 'link'
+      @addTag @router.options.meta if @router?.options and _.has @router.options, 'meta'
+      @addTag @currentController::['meta'] if @currentController?.prototype and _.has @currentController::, 'meta'
+      @addTag @currentRoute.route.options.meta if @currentRoute?.route?.options and _.has @currentRoute.route.options, 'meta'
+
+      @addLink @router.options.link if @router?.options and _.has @router.options, 'link'
+      @addLink @currentController::['link'] if @currentController?.prototype and  _.has @currentController::, 'link'
+      @addLink @currentRoute.route.options.link if @currentRoute?.route?.options and  _.has @currentRoute.route.options, 'link'
 
   updateNode: (type, name, values) ->
     if $('head').has(type + '[data-' + type + '-name="' + name + '"]')[0]

@@ -30,7 +30,7 @@ ToC:
  - [Set via RouteController](https://github.com/VeliovGroup/Meteor-iron-router-meta#set-via-routecontroller)
  - [Other examples](https://github.com/VeliovGroup/Meteor-iron-router-meta#other-examples)
  - [Use function(s) as value](https://github.com/VeliovGroup/Meteor-iron-router-meta#use-functions-as-value)
- - [Use function's context](https://github.com/VeliovGroup/Meteor-iron-router-meta#use-functions-context)
+ - [Use function's context](https://github.com/VeliovGroup/Meteor-iron-router-meta#use-function-context)
  - [Bootstrap configuration](https://github.com/VeliovGroup/Meteor-iron-router-meta#bootstrap-configuration)
 
 Usage:

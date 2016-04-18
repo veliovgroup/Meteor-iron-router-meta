@@ -34,7 +34,15 @@ Router.configure
       itemprop: 'url'
       href: -> getCurrentURL()
     image: -> "#{location.protocol}//#{location.hostname}/images/default_image.png"
-    stylesheet: "https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css"
+    twbs: 
+      href: 'https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css'
+      rel: 'stylesheet'
+  script:
+    twbs: "https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"
+    base64:
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/Base64/0.3.0/base64.min.js'
+      async: true
+      defer: true
 
 
 secondPageController = RouteController.extend
@@ -56,7 +64,11 @@ secondPageController = RouteController.extend
       rel: 'image'
       sizes: '500x500'
       href: ->  "#{location.protocol}//#{location.hostname}/images/second_page_image.png"
-    stylesheet: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+    twbs: 
+      href: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'
+      rel: 'stylesheet'
+  script:
+    twbs: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"
 
 Router.map ->
   @route 'index',
@@ -85,8 +97,12 @@ Router.map ->
         rel: 'image'
         sizes: '500x500'
         href: ->  "#{location.protocol}//#{location.hostname}/images/third_page_image_#{@params.something}.png"
-      stylesheet: "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css"
+      twbs: 
+        href: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css'
+        rel: 'stylesheet'
+    script:
+      twbs: "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/js/bootstrap.min.js"
 
 if Meteor.isClient
   Template._layout.helpers
-    rand: -> Math.floor(Random.fraction() * 10) * 5
+    rand: -> Random.id()
